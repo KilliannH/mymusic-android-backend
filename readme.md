@@ -19,6 +19,7 @@ populate your db trough the api
 
 download & install elastic search locally
 launch elasticsearch server
+go to localhost:9200
 create an index (ex. logs)
 PUT http://localhost:9200/logs
 ```json
@@ -42,10 +43,19 @@ PUT http://localhost:9200/logs
 ```
 
 create a test log
+(_doc is the type supported by elasticsearch)
 POST http://localhost:9200/logs/_doc/_create
 {
 "level": "info",
 "content": "test"
 }
 
+populate mongodb by using the REST API
 
+///// Kibana part /////
+download and install kibana
+launch kibana server
+go to localhost:5601
+use ElasticSearch Index
+match the index pattern with your previously defined index (should be listed on the list)
+finally go to your dashboard and you will see the logs
