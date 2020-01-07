@@ -10,6 +10,7 @@ run "npm install"
 set your credentials in config.js file
 App host, port
 Db host, port
+Es host, port, indexName
 Api key
 
 run the app server with "node app"
