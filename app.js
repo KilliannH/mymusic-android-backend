@@ -11,7 +11,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Connect to mongodb
-mongoose.connect(`mongodb://${config.HOST}:${config.PORT}/${config.DB_NAME}`, {useNewUrlParser: true});
+mongoose.connect(`mongodb://${config.DB_HOST}:${config.DB_PORT}/${config.DB_NAME}`, {useNewUrlParser: true});
 
 let checkAuth = (req, res, next) => {
     var apiKey = req.get('Authorization');
@@ -74,5 +74,5 @@ app.get('/api/stream/:filename', function (req, res) {
     return file.pipe(res);
 });
 
-app.listen(3000, "0.0.0.0");
-console.log('Running on port 3000...');
+app.listen(config.PORT, config.HOST);
+console.log(`Running on ${config.HOST}:${config.PORT}...`);
