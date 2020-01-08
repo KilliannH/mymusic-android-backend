@@ -3,8 +3,10 @@ var app = express();
 var cors = require('cors');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+var { exec } = require('child_process');
 var config = require('./config.js');
 var fs = require('fs');
+var path = require('path');
 
 app.use(cors());
 
@@ -50,14 +52,52 @@ app.get('/api/songs/:id', function (req, res) {
 /// POST NEW SONG ///
 app.post('/api/songs/', function (req, res) {
 
-    Song.create({
-        title: req.body.title,
-        artist: req.body.artist,
-        album: req.body.album,
-        album_img: req.body.album_img,
-        filename: req.body.filename,
+    let downloadYTFile = () => {
+        return new Promise((resolve, reject) => {
 
-    }).then((song) => res.json(song))
+            exec('cd ' + path.join(__dirname, 'res') + '&& youtube-dl ' + req.body.url + ' --extract-audio --audio-format mp3', (err, stdout, stderr) => {
+                if (err) {
+                    // node couldn't execute the command
+                    return reject(err);
+                }
+
+                console.log(stdout);
+                console.error(stderr);
+
+                if (stdout.includes('Deleting original file')) {
+
+                    let filename = stdout.split('Deleting original file ')[1];
+                    filename = filename.split('.webm')[0];
+                    filename += '.mp3';
+
+                    return resolve({success: true, filename: filename});
+                }
+            });
+        });
+    };
+
+    downloadYTFile().then((result) => {
+        if(result.success) {
+
+            exec('cd ' + path.join(__dirname, 'res') + ' && mv ' + '"' + result.filename + '" ' + path.join(__dirname, 'res') + '/' + req.body.filename, (err, stdout, stderr) => {
+                if (err) {
+                    console.log(err);
+                    console.log(stderr);
+                    console.log(stdout);
+                    res.status(500).json('server error please check logs');
+                } else {
+                    return Song.create({
+                        title: req.body.title,
+                        artist: req.body.artist,
+                        album: req.body.album,
+                        album_img: req.body.album_img,
+                        filename: req.body.filename,
+
+                    }).then((song) => res.json(song));
+                }
+            });
+        }
+    });
 });
 
 /// DELETE SONG ///
