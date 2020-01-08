@@ -41,7 +41,7 @@ app.get('/api/songs', checkAuth, function (req, res) {
     });
 });
 
-/// GET SONGS BY id ///
+/// GET SONG BY id ///
 app.get('/api/songs/:id', function (req, res) {
 
     Song.findOne({
@@ -98,6 +98,23 @@ app.post('/api/songs/', function (req, res) {
             });
         }
     });
+});
+
+/// UPDATE SONG ///
+app.get('/api/songs/:id', function (req, res) {
+    Song.findOne({_id: req.params.id}).then((song) => {
+        if(song) {
+            song.title = req.body.title;
+            song.artist = req.body.artist;
+            song.album = req.body.album;
+            song.album_img = req.body.album_img;
+            song.filename = req.body.filename;
+
+            return song.save().then((song) => res.json(song));
+        } else {
+            res.status(404).json({error: 'no song found'});
+        }
+    })
 });
 
 /// DELETE SONG ///
