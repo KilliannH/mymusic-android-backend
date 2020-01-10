@@ -34,11 +34,21 @@ const Song = mongoose.model('Song', {
 });
 
 /// DEFAULT GET HERE ///
-app.get('/api/songs', checkAuth, function (req, res) {
+app.get('/api/songs/', checkAuth, function (req, res) {
 
-    Song.find().then(songs => {
-        res.json(songs)
-    });
+    console.log(req.query.search);
+
+    if(req.query.search && req.query.search !== "") {
+        Song.find({
+            $text: {$search: req.query.search || ""}
+        }).then(songs => {
+            res.json(songs)
+        });
+    } else {
+        Song.find().then(songs => {
+            res.json(songs)
+        });
+    }
 });
 
 /// GET SONG BY id ///
@@ -50,7 +60,7 @@ app.get('/api/songs/:id', function (req, res) {
 });
 
 /// POST NEW SONG ///
-app.post('/api/songs/', function (req, res) {
+app.post('/api/songs/', checkAuth, function (req, res) {
 
     let downloadYTFile = () => {
         return new Promise((resolve, reject) => {
@@ -101,7 +111,7 @@ app.post('/api/songs/', function (req, res) {
 });
 
 /// UPDATE SONG ///
-app.get('/api/songs/:id', function (req, res) {
+app.put('/api/songs/:id', checkAuth, function (req, res) {
     Song.findOne({_id: req.params.id}).then((song) => {
         if(song) {
             song.title = req.body.title;
@@ -118,7 +128,7 @@ app.get('/api/songs/:id', function (req, res) {
 });
 
 /// DELETE SONG ///
-app.delete('/api/songs/:id', function (req, res) {
+app.delete('/api/songs/:id', checkAuth, function (req, res) {
 
     Song.remove({
             _id: req.params.id
@@ -126,7 +136,7 @@ app.delete('/api/songs/:id', function (req, res) {
 });
 
 // STREAM SONG ///
-app.get('/api/stream/:filename', function (req, res) {
+app.get('/api/stream/:filename', checkAuth, function (req, res) {
     let file = fs.createReadStream('./res/' + req.params.filename);
     return file.pipe(res);
 });
