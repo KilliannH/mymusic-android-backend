@@ -1,6 +1,3 @@
 Local dependencies :
 ffmpeg : official package
 youtube-dl : see installation on official git repository
-
-mongo needs a $text index to perform textSearch queries.
-db.songs.createIndex( { title: "text", artist: "text", album: "text" } )

@@ -35,20 +35,9 @@ const Song = mongoose.model('Song', {
 
 /// DEFAULT GET HERE ///
 app.get('/api/songs/', checkAuth, function (req, res) {
-
-    console.log(req.query.search);
-
-    if(req.query.search && req.query.search !== "") {
-        Song.find({
-            $text: {$search: req.query.search || ""}
-        }).then(songs => {
-            res.json(songs)
+        return Song.find().then(songs => {
+            return res.json(songs)
         });
-    } else {
-        Song.find().then(songs => {
-            res.json(songs)
-        });
-    }
 });
 
 /// GET SONG BY id ///
