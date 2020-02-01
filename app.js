@@ -54,14 +54,12 @@ app.post('/api/songs/', checkAuth, function (req, res) {
     let downloadYTFile = () => {
         return new Promise((resolve, reject) => {
 
-            exec('cd ' + path.join(__dirname, 'res') + '&& youtube-dl ' + req.body.url + ' --extract-audio --audio-format mp3', (err, stdout, stderr) => {
+            exec('cd ' + path.join(__dirname, 'res/') + ' && youtube-dl ' + req.body.youtube_url + ' --extract-audio --audio-format mp3', (err, stdout, stderr) => {
                 if (err) {
                     // node couldn't execute the command
-                    return reject(err);
+                    console.log(stdout);
+                    console.error(stderr);
                 }
-
-                console.log(stdout);
-                console.error(stderr);
 
                 if (stdout.includes('Deleting original file')) {
 
@@ -72,19 +70,21 @@ app.post('/api/songs/', checkAuth, function (req, res) {
                     return resolve({success: true, filename: filename});
                 }
             });
+        }).catch(e => {
+            console.log('error', e);
+            return res.json({success: false});
         });
     };
 
     downloadYTFile().then((result) => {
         if(result.success) {
 
-            exec('cd ' + path.join(__dirname, 'res') + ' && mv ' + '"' + result.filename + '" ' + path.join(__dirname, 'res') + '/' + req.body.filename, (err, stdout, stderr) => {
+            exec('cd ' + path.join(__dirname, 'res/') + ' && mv ' + '"' + result.filename + '" ' + path.join(__dirname, 'res') + '/' + req.body.filename, (err, stdout, stderr) => {
                 if (err) {
                     console.log(err);
                     console.log(stderr);
                     console.log(stdout);
-                    res.status(500).json('server error please check logs');
-                } else {
+                }
                     return Song.create({
                         title: req.body.title,
                         artist: req.body.artist,
@@ -92,10 +92,12 @@ app.post('/api/songs/', checkAuth, function (req, res) {
                         album_img: req.body.album_img,
                         filename: req.body.filename,
 
-                    }).then((song) => res.json(song));
-                }
+                    }).then((song) => res.json({success: true, song: song}));
             });
         }
+    }).catch(e => {
+        console.log('error', e);
+        return res.json({success: false});
     });
 });
 
