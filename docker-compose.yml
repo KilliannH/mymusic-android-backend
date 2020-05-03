@@ -1,0 +1,42 @@
+version: "3"
+services:
+
+  app:
+    depends_on:
+      - mongo
+    container_name: dockerize-node-mongo-app
+    restart: always
+    build: .
+    env_file:
+      - .env
+    environment:
+      - DB_HOST=$DB_HOST
+      - DB_PORT=$DB_PORT
+      - DB_USER=$DB_USER
+      - DB_PASSWORD=$DB_PASSWORD
+      - DB_NAME=$DB_NAME
+      - HOST=$HOST
+      - PORT=$PORT
+    #map from image port (3000) to actual container port
+    ports:
+      - "8080:$PORT"
+    links:
+      - mongo
+
+  mongo:
+    container_name: mongo
+    restart: always
+    image: mongo:4.2.6
+    env_file:
+      - .env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: $DB_USER
+      MONGO_INITDB_ROOT_PASSWORD: $DB_PASSWORD
+      MONGO_INITDB_DATABASE: $DB_NAME
+    ports:
+      - "$DB_PORT:$DB_PORT"
+
+    #override mongo-init.js & persist data
+    volumes:
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - ./mongo-volume:/data/db

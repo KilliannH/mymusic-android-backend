@@ -1,24 +1,46 @@
-var express = require('express');
-var app = express();
-var cors = require('cors');
-var bodyParser = require('body-parser');
-var mongoose = require('mongoose');
-var { exec } = require('child_process');
-var config = require('./config.js');
-var fs = require('fs');
-var path = require('path');
+const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const { exec } = require('child_process');
+const fs = require('fs');
+const path = require('path');
+
+const {
+    API_KEY,
+    HOST,
+    PORT,
+    DB_HOST,
+    DB_PORT,
+    DB_USER,
+    DB_PASSWORD,
+    DB_NAME
+} = process.env;
+
+const app = express();
 
 app.use(cors());
 
 app.use(bodyParser.json());
 
+const port = PORT || 3000;
+const host = HOST || "localhost";
+
 // Connect to mongodb
-mongoose.connect(`mongodb://${config.DB_HOST}:${config.DB_PORT}/${config.DB_NAME}`, {useNewUrlParser: true});
+const db_url = `mongodb://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}`;
+
+mongoose.connect(db_url, (err) => {
+    if(err) {
+        console.error(err);
+    } else {
+        console.log("Database connection established successfully");
+    }
+});
 
 let checkAuth = (req, res, next) => {
-    var apiKey = req.get('Authorization');
+    const apiKey = req.get('Authorization');
 
-    if(apiKey === config.API_KEY) {
+    if(apiKey === API_KEY) {
         next();
     } else {
         res.status(401).send('Unauthorized')
@@ -132,5 +154,6 @@ app.get('/api/stream/:filename', checkAuth, function (req, res) {
     return file.pipe(res);
 });
 
-app.listen(config.PORT, config.HOST);
-console.log(`Running on ${config.HOST}:${config.PORT}...`);
+app.listen(port, host, () => {
+    console.log(`Running on ${host}:${port}...`);
+});
