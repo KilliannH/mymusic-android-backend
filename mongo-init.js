@@ -1,11 +1,19 @@
+const {
+    DB_USER,
+    DB_PASSWORD,
+    DB_NAME
+} = process.env;
+
+db = db.getSiblingDB(DB_NAME);
+
 db.createUser(
     {
-        user: "test-user",
-        pwd: "test-password",
+        user: DB_USER,
+        pwd: DB_PASSWORD,
         roles: [
             {
                 role: "readWrite",
-                db: "mymusic-db"
+                db: DB_NAME
             }
         ]
     }

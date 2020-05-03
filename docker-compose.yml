@@ -26,11 +26,13 @@ services:
   mongo:
     container_name: mongo
     restart: always
-    image: library/mongo:3.0.8
+    image: mongo
     env_file:
       - .env
     environment:
-      MONGO_INITDB_DATABASE: "mymusic-db"
+      MONGO_INITDB_DATABASE: $DB_NAME
+      MONGO_INITDB_USERNAME: $DB_USER
+       MONGO_INITDB_PASSWORD: $DB_PASSWORD
     ports:
       - "$DB_PORT:$DB_PORT"
 
