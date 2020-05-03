@@ -1,17 +1,11 @@
-const {
-    DB_USER,
-    DB_PASSWORD,
-    DB_NAME
-} = process.env;
-
 db.createUser(
     {
-        user: DB_USER,
-        pwd: DB_PASSWORD,
+        user: "YourUsername",
+        pwd: "YourPasswordHere",
         roles: [
             {
                 role: "readWrite",
-                db: DB_NAME
+                db: "your-database-name"
             }
         ]
     }
