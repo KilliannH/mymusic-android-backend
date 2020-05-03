@@ -36,6 +36,6 @@ services:
     ports:
       - "$DB_PORT:$DB_PORT"
 
-    #override mongo-init.js & persist data
+    #override init-mongo.js & persist data
     volumes:
-      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
