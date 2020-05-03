@@ -2,8 +2,6 @@ version: "3"
 services:
 
   app:
-    depends_on:
-      - mongo
     container_name: dockerize-node-mongo-app
     restart: always
     build: .
@@ -20,26 +18,34 @@ services:
     #map from image port (3000) to actual container port
     ports:
       - "8080:$PORT"
-    links:
+    networks:
+      - mongo_net
+    depends_on:
       - mongo
 
   mongo:
-    container_name: mongo
-    restart: always
     image: mongo:4.2.3-bionic
-    env_file:
-      - .env
-    environment:
-      - MONGO_INITDB_DATABASE=$DB_NAME
-      - MONGO_INITDB_ROOT_USERNAME=$DB_USER
-      - MONGO_INITDB_ROOT_PASSWORD=$DB_PASSWORD
-    ports:
-      - "$DB_PORT:$DB_PORT"
+      container_name: my-mongodb
+      ports:
+        - 27017:27017
+      environment:
+        - MONGO_INITDB_DATABASE=test
+        - MONGO_INITDB_ROOT_USERNAME=admin
+        - MONGO_INITDB_ROOT_PASSWORD=admin
+      volumes:
+        # seeding scripts
+        - ./mongo-entrypoint:/docker-entrypoint-initdb.d
+        # named volumes
+        - mongodb:/data/db
+        - mongoconfig:/data/configdb
+      networks:
+        - mongo_net
 
-    #override init-mongo.js & persist data
-    volumes:
-      # seeding scripts
-      - ./mongo-entrypoint:/docker-entrypoint-initdb.d
-      # named volumes
-      - ./mongodb:/data/db
-      - ./mongoconfig:/data/configdb
+  volumes:
+    # default dir on Ubuntu: /var/lib/docker/volumes
+    mongodb:
+    mongoconfig:
+
+  networks:
+    mongo_net:
+      driver: bridge
