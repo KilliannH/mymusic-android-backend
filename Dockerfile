@@ -16,7 +16,8 @@ RUN chmod a+rx /usr/local/bin/youtube-dl
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 COPY package*.json ./
-RUN npm install
+RUN /root/.nvm/versions/node/v${NODE_VERSION}/bin/npm install
 COPY . .
+VOLUME /res /usr/src/app/res
 EXPOSE 8000
 CMD ["node", "app.js"]
