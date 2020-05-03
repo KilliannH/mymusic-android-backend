@@ -41,5 +41,5 @@ services:
       # seeding scripts
       - ./mongo-entrypoint:/docker-entrypoint-initdb.d
       # named volumes
-      - mongodb:/data/db
-      - mongoconfig:/data/configdb
+      - ./mongodb:/data/db
+      - ./mongoconfig:/data/configdb
