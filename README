@@ -1,3 +1,5 @@
 Local dependencies :
 ffmpeg : official package
 youtube-dl : see installation on official git repository
+
+node backend is dockerised but it assumes that you have a working mongodb instance somewhere
