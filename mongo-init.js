@@ -4,6 +4,8 @@ const {
     DB_NAME
 } = process.env;
 
+db = db.getSiblingDB(DB_NAME);
+
 db.createUser(
     {
         user: DB_USER,

@@ -30,11 +30,9 @@ services:
     env_file:
       - .env
     environment:
-      DB_USER: $DB_USER
-      DB_PASSWORD: $DB_PASSWORD
-      DB_NAME: $DB_NAME
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: secret
+
+      MONGO_INITDB_ROOT_USERNAME: $DB_USER
+      MONGO_INITDB_ROOT_PASSWORD: $DB_PASSWORD
       MONGO_INITDB_DATABASE: $DB_NAME
     ports:
       - "$DB_PORT:$DB_PORT"
