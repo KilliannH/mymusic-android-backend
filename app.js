@@ -5,17 +5,7 @@ const mongoose = require('mongoose');
 const { exec } = require('child_process');
 const fs = require('fs');
 const path = require('path');
-
-const {
-    API_KEY,
-    HOST,
-    PORT,
-    DB_HOST,
-    DB_PORT,
-    DB_USER,
-    DB_PASSWORD,
-    DB_NAME
-} = process.env;
+const config = require('./config.js');
 
 const app = express();
 
@@ -23,11 +13,11 @@ app.use(cors());
 
 app.use(bodyParser.json());
 
-const port = PORT || 3000;
-const host = HOST || "localhost";
+const port = config.PORT;
+const host = config.HOST;
 
 // Connect to mongodb
-const db_url = `mongodb://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}`;
+const db_url = `mongodb://${config.DB_HOST}:${config.DB_PORT}/${config.DB_NAME}`;
 
 mongoose.connect(db_url, (err) => {
     if(err) {
@@ -40,7 +30,7 @@ mongoose.connect(db_url, (err) => {
 let checkAuth = (req, res, next) => {
     const apiKey = req.get('Authorization');
 
-    if(apiKey === API_KEY) {
+    if(apiKey === config.API_KEY) {
         next();
     } else {
         res.status(401).send('Unauthorized')
@@ -60,6 +50,10 @@ app.get('/api/songs/', checkAuth, function (req, res) {
         return Song.find().then(songs => {
             return res.json(songs)
         });
+});
+
+app.get('/yolo', function (req, res) {
+	res.send("bibi");
 });
 
 /// GET SONG BY id ///
