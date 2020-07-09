@@ -52,9 +52,6 @@ app.get('/api/songs/', checkAuth, function (req, res) {
         });
 });
 
-app.get('/yolo', function (req, res) {
-	res.send("bibi");
-});
 
 /// GET SONG BY id ///
 app.get('/api/songs/:id', function (req, res) {
@@ -75,6 +72,7 @@ app.post('/api/songs/', checkAuth, function (req, res) {
                     // node couldn't execute the command
                     console.log(stdout);
                     console.error(stderr);
+			return res.json({success: false, error: err});
                 }
 
                 if (stdout.includes('Deleting original file')) {
@@ -100,6 +98,7 @@ app.post('/api/songs/', checkAuth, function (req, res) {
                     console.log(err);
                     console.log(stderr);
                     console.log(stdout);
+		return res.json({success: false, error: err});
                 }
                     return Song.create({
                         title: req.body.title,
