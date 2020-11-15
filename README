@@ -3,3 +3,16 @@ ffmpeg : official package
 youtube-dl : see installation on official git repository
 
 node backend is dockerised.
+
+docker-compose build
+docker-compose up
+
+note db is stored on a separate volume for data persistance. I you recreate an image somewhere (other folder), think about removing unused volumes.
+docker container ps -a
+docker container rm
+
+and also delete unused volumes
+docker volume ls
+docker volume prune
+
+tested on an Ubuntu 16 VM, queried from a Windows host w. Postman.
