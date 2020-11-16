@@ -67,7 +67,7 @@ app.post('/api/songs/', checkAuth, function (req, res) {
     let downloadYTFile = () => {
         return new Promise((resolve, reject) => {
 
-            exec('cd ' + path.join(__dirname, 'res/') + ' && youtube-dl ' + req.body.youtube_url + ' --extract-audio --audio-format mp3', (err, stdout, stderr) => {
+            exec('cd ' + path.join(__dirname, 'res/') + ' && youtube-dl ' + req.body.youtube_url + ' --extract-audio --audio-format mp3 --audio-quality 0', (err, stdout, stderr) => {
                 if (err) {
                     // node couldn't execute the command
                     console.log(stdout);

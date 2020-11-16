@@ -1,4 +1,9 @@
-FROM node:10
+FROM node:10-alpine
+
+RUN apk add --no-cache curl ffmpeg python python-dev py-pip
+
+RUN curl -L https://yt-dl.org/downloads/latest/youtube-dl -o /usr/local/bin/youtube-dl
+RUN chmod a+rx /usr/local/bin/youtube-dl
 
 RUN mkdir -p /user/src/app
 

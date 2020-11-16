@@ -6,6 +6,8 @@ services:
   build: .
   ports:
    - "3000:3000"
+  volumes:
+   - res:/res
   depends_on:
    - mongo
  mongo:
@@ -17,3 +19,4 @@ services:
    - data-volume:/data/db
 volumes:
  data-volume:
+ res:
