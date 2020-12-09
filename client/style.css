@@ -1,0 +1,18 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+img {
+    height: auto;
+    width: 100%;
+}
+
+#heading {
+    color: rgb(40, 40, 40);
+    top: 40%;
+    left: 48%;
+    text-align: center;
+    z-index: 1000;
+}
