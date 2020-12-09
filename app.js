@@ -18,7 +18,7 @@ const host = config.HOST;
 let checkAuth = (req, res, next) => {
     const apiKey = req.get('Authorization');
 
-    if(apiKey === config.API_KEY) {
+    if(apiKey && apiKey === config.API_KEY) {
         next();
     } else {
         res.status(401).send('Unauthorized')
