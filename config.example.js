@@ -2,11 +2,12 @@ const config = {
 	HOST: "0.0.0.0",
 	PORT: "3000",
 
-	DB_HOST: "mongo",
-	DB_PORT: "27017",
-	DB_NAME: "nativeMusic_db",
+	DB_HOST: "localhost",
+	DB_USER: "postgres",
+	DB_PASSWORD: "postgres",
 
-	API_KEY: "secret"
+	DB_PORT: "5432",
+	DB_NAME: "myDb",
 };
 
 module.exports = config;
