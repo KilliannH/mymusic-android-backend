@@ -59,16 +59,20 @@ app.post('/download/', checkAuth, function (req, res) {
     downloadYTFile().then((result) => {
         if(result.success) {
 
-            exec('cd ' + path.join(__dirname, 'res/') + ' && mv ' + '"' + result.filename + '" ' + path.join(__dirname, 'res') + '/' + req.body.filename, (err, stdout, stderr) => {
-                if (err) {
-                    console.log(err);
-                    console.log(stderr);
-                    console.log(stdout);
-		            return res.json({success: false, error: err});
-                } else {
-                    return res.json({success: true, message: "Song downloaded successfully"});
-                }
-            });
+            if(req.body.filename) {
+                exec('cd ' + path.join(__dirname, 'res/') + ' && mv ' + '"' + result.filename + '" ' + path.join(__dirname, 'res') + '/' + req.body.filename, (err, stdout, stderr) => {
+                    if (err) {
+                        console.log(err);
+                        console.log(stderr);
+                        console.log(stdout);
+                        return res.json({success: false, error: err});
+                    } else {
+                        return res.json({success: true, filename: result.filename});
+                    }
+                });
+            } else {
+                return res.json({success: false, message: "Filename is undefined"});
+            }
         }
     }).catch(e => {
         console.log('error', e);
