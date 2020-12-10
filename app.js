@@ -75,7 +75,7 @@ app.post('/api/songs/', checkAuth, function (req, res) {
 });
 
 // STREAM SONG ///
-app.get('/api/stream/:filename', checkAuth, function (req, res) {
+app.get('/stream/:filename', checkAuth, function (req, res) {
     let file = fs.createReadStream('./res/' + req.params.filename);
     return file.pipe(res);
 });
