@@ -67,7 +67,7 @@ app.post('/download/', checkAuth, function (req, res) {
                         console.log(stdout);
                         return res.json({success: false, error: err});
                     } else {
-                        return res.json({success: true, filename: result.filename});
+                        return res.json({success: true, filename: req.body.filename});
                     }
                 });
             } else {
