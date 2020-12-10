@@ -11,6 +11,8 @@ const app = express();
 app.use(cors());
 
 app.use(bodyParser.json());
+app.use(express.static(__dirname+'/client'));
+
 
 const port = config.PORT;
 const host = config.HOST;
@@ -26,7 +28,7 @@ let checkAuth = (req, res, next) => {
 };
 
 /// POST NEW SONG ///
-app.post('/api/songs/', checkAuth, function (req, res) {
+app.post('/download/', checkAuth, function (req, res) {
 
     let downloadYTFile = () => {
         return new Promise((resolve, reject) => {
