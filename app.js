@@ -82,7 +82,7 @@ app.post('/download/', checkAuth, function (req, res) {
 
 // STREAM SONG ///
 app.get('/stream/:filename', checkAuth, function (req, res) {
-    let file = fs.createReadStream('./res/' + req.params.filename);
+    let file = fs.createReadStream(path.join(__dirname, 'res/') + req.params.filename);
     return file.pipe(res);
 });
 
