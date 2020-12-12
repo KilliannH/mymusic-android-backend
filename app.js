@@ -83,6 +83,14 @@ app.post('/download/', checkAuth, function (req, res) {
 // STREAM SONG ///
 app.get('/stream/:filename', checkAuth, function (req, res) {
     let file = fs.createReadStream(path.join(__dirname, 'res/') + req.params.filename);
+
+    let stat = fs.statSync('./res/' + req.params.filename);
+   
+    res.writeHead(200, {
+        'Content-Type': 'audio/mpeg',
+        'Content-Length': stat.size
+    });    
+
     return file.pipe(res);
 });
 
