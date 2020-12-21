@@ -30,10 +30,14 @@ let checkAuth = (req, res, next) => {
 /// POST NEW SONG ///
 app.post('/download/', checkAuth, function (req, res) {
 
+    let buildUrl = (youtubeId) => {
+        return 'https://www.youtube.com/watch?v=' + youtubeId;
+    }
+
     let downloadYTFile = () => {
         return new Promise((resolve, reject) => {
 
-            exec('cd ' + path.join(__dirname, 'res/') + ' && youtube-dl ' + req.body.youtube_url + ' --extract-audio --audio-format mp3 --audio-quality 0', (err, stdout, stderr) => {
+            exec('cd ' + path.join(__dirname, 'res/') + ' && youtube-dl ' + buildUrl(req.body.youtubeId) + ' --extract-audio --audio-format mp3 --audio-quality 0', (err, stdout, stderr) => {
                 if (err) {
                     // node couldn't execute the command
                     console.log(stdout);
@@ -83,6 +87,11 @@ app.post('/download/', checkAuth, function (req, res) {
 // STREAM SONG ///
 app.get('/stream/:filename', checkAuth, function (req, res) {
     let file = fs.createReadStream('./res/' + req.params.filename);
+    let stat = fs.statSync('./res/' + req.params.filename);
+    res.writeHead(200, {
+        'Content-Type': 'audio/mpeg',
+        'Content-Length': stat.size
+    });
     return file.pipe(res);
 });
 
